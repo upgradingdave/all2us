@@ -57,7 +57,7 @@
   :ragtime
   {:migrations ragtime.sql.files/migrations,
    :database
-   "jdbc:postgresql://localhost/all2us?user=db_user_name_here&password=db_user_password_here"}
+   "jdbc:postgresql://postgres/all2us?user=all2us&password=all2us"}
   :uberjar-name
   "all2us.jar"
   :min-lein-version "2.0.0")

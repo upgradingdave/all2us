@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="jumbotron">
-    <h1>Welcome to all2us</h1>
-    <p>Time to start building your site!</p>
-    <p><a class="btn btn-primary btn-lg" href="http://luminusweb.net">Learn more &raquo;</a></p>
-  </div>
-
   <div class="row-fluid">
     <div class="span9">
-    {{content|safe}}
+      <h3>Shorten Some Urls</h3>
+      <p>This is a url shortener service. Enter a url in the text box below
+        to create a shorter version of that url.</p>
+      {{create-form|safe}}
+
+      <h3>Recently Shortened Urls</h3>
+      <ul>
+      {% for url in urls %}
+        <li>{{url.diff}}{{url.url}} --> <a href="/{{url.short_url}}">http://all2.us/{{url.short_url}}</a></li>
+      {% endfor %}
+      </ul>
     </div>
   </div>
 {% endblock %}
