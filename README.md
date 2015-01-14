@@ -1,48 +1,36 @@
 # all2us
 
-A url shortening service
+A url shortening web service
 
-## Prerequisites
+## Development Environment Setup
 
 You will need [Leiningen][1] 2.0 or above installed.
 
 [1]: https://github.com/technomancy/leiningen
 
 You'll also need a postgresql database server. You can use pallet to
-set one up. By default, pallet will use virtualbox. Run this command
-to create a virtual server configured with apache and postgres:
+set one up. By default, pallet will use virtualbox. Run this to setup
+a virtual machine configured with apache, postgres, and the all2us
+webapp service:
 
+    lein uberjar
     lein pallet up
 
-## Running
+Then, run the db migrations to create the database tables. The db
+migrations assume the database server's hostname is 'postgres', so
+first add the following 2 lines to your local hosts file:
 
-Use pallet to setup a virtual server with:
-
-- apache installed and configured with all2.us virtualhost
-- postgres installed with all2us db and user configured
-
-Make sure to update your hosts file with the ip address of the vm:
+Make sure to update your hosts file with the ip address of the vm (use
+the ip address of the virtual machine that was just created using pallet)
 
     192.168.59.133 postgres
     192.168.59.133 all2.us
 
-After setting up db for the first time, remember to create the db
-tables:
+Then, use lein ragtime to run the migrations
 
-    lein ragtime migrate
+    lien do clean, ragtime migrate
 
-Then you should be able to access the site here:
-
-    http://all2.us
-
-To run the service locally, use:
-
-    lein run
-
-Or build and run an uberjar:
-
-    lein uberjar
-    java -jar ./target/all2us.jar
+If all goes well, you can browse to `http://all2.us` and see the app. 
 
 ## Known issues
 

@@ -10,4 +10,6 @@
              {:node-spec
               {:image {:os-family :ubuntu :os-version-matches "14.04"
                        :os-64-bit true}}
-              :selectors #{:default}}})
+              :selectors #{:default}}}
+  :groups [all2us-spec]
+)

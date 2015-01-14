@@ -164,12 +164,6 @@
                                            :compute compute-service
                                            :phase phase-fn))))))
 
-(defn run2 [phase-fn & [compute-service]]
-  (let [compute-service (or compute-service (service :vmfest))]
-    (swap! s (fn [o] (pallet.api/converge {all2us-spec 1}
-                                          :compute compute-service
-                                          :phase phase-fn)))))
-
 (defn shutdown [& [compute-service]]
   (let [compute-service (or compute-service (service :vmfest))]
     (summary
