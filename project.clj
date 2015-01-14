@@ -1,6 +1,6 @@
 (defproject
-  all2us
-  "0.1.0-SNAPSHOT"
+  upgradingdave/all2us
+  "0.1.0-alpha.1"
   :description
   "FIXME: write description"
   :url
