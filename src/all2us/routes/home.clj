@@ -9,7 +9,7 @@
             [noir.validation :as v]
 ))
 
-(defn valid-url? 
+(defn check-url! 
   "Perform a number of validation checks to make sure url passed is
   valid. *errors* dynamic variable that is bound to the request is
   updated if any errors are found. This method returns true or false.
@@ -17,8 +17,7 @@
   false"
   [url]
   (v/rule (v/has-value? url)
-          [:url "A url is required"])
-  (v/errors? :url))
+          [:url "A url is required"]))
 
 (defn create-form 
   "generate the html needed for the create url form"
@@ -45,9 +44,10 @@
                             (db/find-urls {:limit 20}))}))
 
 (defn create-url [url]
-  (if (check-url url)
-    (resp/json (db/create-url url))
-    (resp/status 400 (resp/json {:errors (v/get-errors)}))))
+  (check-url! url)
+  (if (v/errors? :url)
+    (resp/status 400 (resp/json {:errors (v/get-errors)}))
+    (resp/json (db/create-url url))))
 
 (defroutes home-routes
   (GET "/" [] (home-page))

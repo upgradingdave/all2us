@@ -8,6 +8,12 @@
 
 (defentity urls)
 
+(defn update-url [id url short-url]
+  (update urls
+  (set-fields {:url url
+               :short_url short-url})
+  (where {:id id})))
+
 (defn create-url 
   "pass a long url, and this will create a new record in the database
   and return a short url"
@@ -16,12 +22,6 @@
         short-url (url/encode id)]
     (update-url id url short-url)
     (assoc rec :short_url short-url)))
-
-(defn update-url [id url short-url]
-  (update urls
-  (set-fields {:url url
-               :short_url short-url})
-  (where {:id id})))
 
 (defn get-url [id]
   (first (select urls
