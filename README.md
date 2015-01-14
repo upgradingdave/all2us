@@ -14,7 +14,9 @@ a virtual machine configured with apache, postgres, and the all2us
 webapp service:
 
     lein uberjar
-    lein pallet up
+    lein pallet -P :vmfest up
+
+Note, use `-P :aws` to spin up an amazon ec2 instance.
 
 Then, run the db migrations to create the database tables. The db
 migrations assume the database server's hostname is 'postgres', so

@@ -36,8 +36,7 @@
    [org.apache.jclouds/jclouds-allcompute "1.7.2"]
    [org.apache.jclouds.driver/jclouds-slf4j "1.7.2"
     :exclusions [org.slf4j/slf4j-api]]
-   [org.apache.jclouds.driver/jclouds-sshj "1.7.2" 
-    :exclusions [net.schmizz/sshj]]
+   [org.apache.jclouds.driver/jclouds-sshj "1.7.2"]
    [ch.qos.logback/logback-classic "1.0.9"]
    [com.palletops/pallet-vmfest "0.4.0-alpha.1"]
    ;; pallet crates

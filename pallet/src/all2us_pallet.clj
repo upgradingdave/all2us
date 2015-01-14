@@ -33,11 +33,17 @@
    "    emit all2us_running" \newline
    "end script" \newline))
 
-(def default-node-spec
-  (node-spec
-   :image {:image-id :ubuntu-14.04
-           :os-family :ubuntu}
-   :hardware {:min-cores 1}))
+(defmulti my-node-spec (fn [service] service))
+
+(defmethod my-node-spec :vmfest [params] 
+  {:image {:os-family :ubuntu
+           :image-id :ubuntu-14.04}
+   :hardware {:min-cores 1}})
+
+(defmethod my-node-spec :aws [params] 
+  {:image {:os-family :ubuntu
+           :image-id "us-east-1/ami-16d7b37e"}
+   :hardware {:hardware-id "t1.micro"}})
 
 (def
   ^{:doc "Setup some misc stuff on the server"}
@@ -46,10 +52,10 @@
    :phases
    {:bootstrap (plan-fn 
                 ;; allows login with pki
-                (automated-admin-user)
-                ;; refresh apt-get
-                (package-manager :update))
+                (automated-admin-user))
     :configure (plan-fn 
+                ;; refresh apt-get
+                (package-manager :update)
                 ;; setup postgres user
                 (user "postgres")
                 ;; setup etc/hosts
@@ -109,9 +115,9 @@
    {:configure (postgres-role-and-db-action alias)}
    :default-phases [:configure]))
 
-(def
-  ^{:doc "Defines a group spec that can be passed to converge or lift."}
-  all2us-spec
+(defn all2us-group-spec
+  "Defines a group spec that can be passed to converge or lift."
+  [provider-type]
   (group-spec
    "all2us"
    :extends [base-server
@@ -132,7 +138,7 @@
    {:configure (plan-fn 
                 ;; start the service!
                 (exec {:language :bash} "sudo service all2us start"))}
-   :node-spec default-node-spec
+   :node-spec (my-node-spec provider-type)
    :default-phases [:install :configure]))
 
 ;; convenience methods
@@ -151,21 +157,24 @@
   (let [sess (or sess @s)]
     (explain-session sess)))
 
-(defn startup [& [compute-service]]
-  (let [compute-service (or compute-service (service :vmfest))]
+(defn startup [& {:keys [compute-service provider]}]
+  (let [provider (or provider :vmfest)
+        compute-service (or compute-service (service provider))]
     (summary
-     (swap! s (fn [o] (pallet.api/converge {all2us-spec 1}
+     (swap! s (fn [o] (pallet.api/converge {(all2us-group-spec provider) 1}
                                            :compute compute-service))))))
 
-(defn run [phase-fn & [compute-service]]
-  (let [compute-service (or compute-service (service :vmfest))]
+(defn run [phase-fn & {:keys [compute-service provider]}]
+  (let [provider (or provider :vmfest)
+        compute-service (or compute-service (service provider))]
     (summary
-     (swap! s (fn [o] (pallet.api/converge {all2us-spec 1}
+     (swap! s (fn [o] (pallet.api/converge {(all2us-group-spec provider) 1}
                                            :compute compute-service
                                            :phase phase-fn))))))
 
-(defn shutdown [& [compute-service]]
-  (let [compute-service (or compute-service (service :vmfest))]
+(defn shutdown [& {:keys [compute-service provider]}]
+  (let [provider (or provider :vmfest) 
+        compute-service (or compute-service (service provider))]
     (summary
-     (swap! s (fn [o] (pallet.api/converge {all2us-spec 0}
+     (swap! s (fn [o] (pallet.api/converge {(all2us-group-spec provider) 0}
                                            :compute compute-service))))))
