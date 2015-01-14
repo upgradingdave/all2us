@@ -26,25 +26,47 @@
    [org.clojure/clojure "1.6.0"]
    [environ "1.0.0"]
    [ring-server "0.3.1"]
-   [ragtime "0.3.6"]]
+   [ragtime "0.3.6"]
+   [http-kit "2.1.19"]
+
+   ;; pallet
+   [com.palletops/pallet "0.8.0-RC.9"]
+   [com.palletops/pallet-jclouds "1.7.3"]
+   [org.apache.jclouds/jclouds-allblobstore "1.7.2"]
+   [org.apache.jclouds/jclouds-allcompute "1.7.2"]
+   [org.apache.jclouds.driver/jclouds-slf4j "1.7.2"
+    :exclusions [org.slf4j/slf4j-api]]
+   [org.apache.jclouds.driver/jclouds-sshj "1.7.2" 
+    :exclusions [net.schmizz/sshj]]
+   [ch.qos.logback/logback-classic "1.0.9"]
+   [com.palletops/pallet-vmfest "0.4.0-alpha.1"]
+   ;; pallet crates
+   [com.palletops/postgres-crate "0.8.1-9.3.ubuntu"]
+   [com.palletops/java-crate "0.8.0-beta.6"]
+   [upgradingdave/httpd "0.1.0-alpha.1"
+    :exclusions [net.schmizz/sshj]]
+   ]
+  :source-paths ["src" "pallet/src"]
   :repl-options
   {:init-ns all2us.repl}
   :jvm-opts
   ["-server"]
   :plugins
-  [[lein-ring "0.8.13"]
+  [[lein-ring "0.9.0"]
    [lein-environ "1.0.0"]
    [lein-ancient "0.5.5"]
-   [ragtime/ragtime.lein "0.3.6"]]
+   [ragtime/ragtime.lein "0.3.6"]
+   [com.palletops/pallet-lein "0.8.0-alpha.1"]]
   :ring
   {:handler all2us.handler/app,
    :init all2us.handler/init,
-   :destroy all2us.handler/destroy}
+   :destroy all2us.handler/destroy
+   :uberwar-name "all2us.war"}
   :profiles
   {:uberjar {:omit-source true, :env {:production true}, :aot :all},
    :production
    {:ring
-    {:open-browser? false, :stacktraces? false, :auto-reload? false}},
+    {:open-browser? falsen, :stacktraces? false, :auto-reload? false}},
    :dev
    {:dependencies
     [[ring-mock "0.1.5"]
@@ -60,4 +82,5 @@
    "jdbc:postgresql://postgres/all2us?user=all2us&password=all2us"}
   :uberjar-name
   "all2us.jar"
-  :min-lein-version "2.0.0")
+  :min-lein-version "2.0.0"
+  :main all2us.core)
