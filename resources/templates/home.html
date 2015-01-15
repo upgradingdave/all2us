@@ -8,11 +8,23 @@
       {{create-form|safe}}
 
       <h3>Recently Shortened Urls</h3>
-      <ul>
+      <ul id="recent-url-list">
       {% for url in urls %}
         <li>{{url.diff}}{{url.url}} --> <a href="/{{url.short_url}}">http://all2.us/{{url.short_url}}</a></li>
       {% endfor %}
       </ul>
+
+      <h3>Rest API</h3>
+      <div id="rest-api-wrap">
+        <p>Use the following rest api endpoints to create short urls
+          from your own programs</p>
+        <dl>
+          <dd>POST /urls - Create a new Url</dd>
+          <dd>GET /urls - Retrieve JSON list of urls</dd>
+          <dd>GET /urls/:short-url - Given a short url, get the
+          original long url. </dd>
+        </dl>
+      </div>
     </div>
   </div>
 {% endblock %}

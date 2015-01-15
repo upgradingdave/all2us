@@ -32,9 +32,15 @@
   "Options: 
     :limit -> limit number records returned
     :order -> a field name (keyword) to order results
+    :asc -> true for ascending (default) or false for descending
     :offest -> number or rows to skip
   "
-  [& [{max :limit orderby :order :as options :or {orderby :lastmodified}}]]
+  [& [{asc :asc max :limit orderby :order idx :offset
+       :as options 
+       :or {asc true 
+            orderby :lastmodified
+            idx 0}}]]
   (select urls
           (limit max)
-          (order orderby)))
+          (order orderby (if asc :ASC :DESC))
+          (offset idx)))

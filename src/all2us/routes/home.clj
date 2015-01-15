@@ -23,11 +23,12 @@
   "generate the html needed for the create url form"
   []
   (h/html 
-   [:form {:method "post" :action "/urls"} 
+   [:form {:method "post" :action "/urls" :id "url-form"} 
     [:div {:class "form-group"}
-     [:label {:for "url"} "Url to Shorten"]
+     [:label {:for "url" :id "url-label"} "Url to Shorten"]
      [:input {:class "form-control" :type "text" :name "url" :id "url"}]]
-    [:button {:class "btn btn-default" :type "submit"} "Shorten this Url"]]))
+    [:button {:class "btn btn-default" :type "submit"} "Shorten this Url"]
+]))
 
 (defn how-short? 
   "calculate difference between url and short url"
@@ -41,7 +42,7 @@
   (layout/render
     "home.html" {:create-form (create-form)
                  :urls (map #(assoc % :diff (how-short? %)) 
-                            (db/find-urls {:limit 20}))}))
+                            (db/find-urls {:limit 7 :asc false}))}))
 
 (defn create-url [url]
   (check-url! url)
@@ -57,7 +58,15 @@
 
   ;; REST API
   (POST "/urls" [url] (create-url url))
-  (GET "/urls" [] (resp/json (db/find-urls)))
+  (GET "/urls" {{limit :limit asc :asc offset :offset order :order} :params}
+       (let [limit (if limit (Integer/parseInt limit) limit)
+             asc (if asc (Boolean/parseBoolean asc) asc)
+             offset (if offset (Integer/parseInt offset) offset)
+             order (keyword order)
+             options {:limit limit :asc asc :offset offset :order order}]
+         (resp/json (db/find-urls 
+                     (into {} (filter (fn [[k v]] (not (nil? v)) ) options))))))
+
   (GET "/urls/:url" [url] (resp/json (db/get-url (url/decode url))))
 
   ;; Redirects
