@@ -18,4 +18,4 @@
                        :image-id "us-east-1/ami-16d7b37e"}
                :hardware {:hardware-id "t1.micro"}}
               :selectors #{:default}}}
-  :groups [(all2us-group-spec :aws)])
+  :groups [(all2us-group-spec :vmfest)])

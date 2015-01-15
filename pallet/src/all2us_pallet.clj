@@ -42,7 +42,7 @@
 
 (defmethod my-node-spec :aws [params] 
   {:image {:os-family :ubuntu
-           :image-id "us-east-1/ami-16d7b37e"}
+           :image-id "us-east-1/ami-64e27e0c"}
    :hardware {:hardware-id "t1.micro"}})
 
 (def
@@ -52,10 +52,10 @@
    :phases
    {:bootstrap (plan-fn 
                 ;; allows login with pki
-                (automated-admin-user))
-    :configure (plan-fn 
+                (automated-admin-user)
                 ;; refresh apt-get
-                (package-manager :update)
+                (package-manager :update))
+    :configure (plan-fn 
                 ;; setup postgres user
                 (user "postgres")
                 ;; setup etc/hosts
@@ -123,7 +123,7 @@
    :extends [base-server
              ;; install postgres
              (postgres/server-spec
-              {:version "9.3"
+              {;;:version "9.3"
                :options {:listen_addresses ["*"]}
                :permissions [["host" "all" "all" "all" "md5"]]})
              (postgres-role-and-db "all2us")

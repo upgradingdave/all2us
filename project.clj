@@ -28,24 +28,7 @@
    [ring-server "0.3.1"]
    [ragtime "0.3.6"]
    [http-kit "2.1.19"]
-
-   ;; pallet
-   [com.palletops/pallet "0.8.0-RC.9"]
-   [com.palletops/pallet-jclouds "1.7.3"]
-   [org.apache.jclouds/jclouds-allblobstore "1.7.2"]
-   [org.apache.jclouds/jclouds-allcompute "1.7.2"]
-   [org.apache.jclouds.driver/jclouds-slf4j "1.7.2"
-    :exclusions [org.slf4j/slf4j-api]]
-   [org.apache.jclouds.driver/jclouds-sshj "1.7.2"]
-   [ch.qos.logback/logback-classic "1.0.9"]
-   [com.palletops/pallet-vmfest "0.4.0-alpha.1"]
-   ;; pallet crates
-   [com.palletops/postgres-crate "0.8.1-9.3.ubuntu"]
-   [com.palletops/java-crate "0.8.0-beta.6"]
-   [upgradingdave/httpd "0.1.0-alpha.1"
-    :exclusions [net.schmizz/sshj]]
    ]
-  :source-paths ["src" "pallet/src"]
   :repl-options
   {:init-ns all2us.repl}
   :jvm-opts
@@ -65,7 +48,7 @@
   {:uberjar {:omit-source true, :env {:production true}, :aot :all},
    :production
    {:ring
-    {:open-browser? falsen, :stacktraces? false, :auto-reload? false}},
+    {:open-browser? false, :stacktraces? false, :auto-reload? false}},
    :dev
    {:dependencies
     [[ring-mock "0.1.5"]
@@ -74,7 +57,25 @@
     :injections
     [(require 'pjstadig.humane-test-output)
      (pjstadig.humane-test-output/activate!)],
-    :env {:dev true}}}
+    :env {:dev true}}
+   :pallet {:dependencies 
+            [[com.palletops/pallet "0.8.0-RC.9"]
+             [com.palletops/pallet-jclouds "1.7.3"]
+             [org.apache.jclouds/jclouds-allblobstore "1.7.2"]
+             [org.apache.jclouds/jclouds-allcompute "1.7.2"]
+             [org.apache.jclouds.driver/jclouds-slf4j "1.7.2"
+              :exclusions [org.slf4j/slf4j-api]]
+             [org.apache.jclouds.driver/jclouds-sshj "1.7.2"]
+             [ch.qos.logback/logback-classic "1.0.9"]
+             [com.palletops/pallet-vmfest "0.4.0-alpha.1"]
+             ;; pallet crates
+             [com.palletops/postgres-crate "0.8.1-9.3.ubuntu"]
+             [com.palletops/java-crate "0.8.0-beta.6"]
+             [upgradingdave/httpd "0.1.0-alpha.1"
+              :exclusions [net.schmizz/sshj]]]
+            :source-paths ["pallet/src"]}
+   }
+  :aliases {"pallet" ["with-profile" "+pallet" "pallet"]}
   :ragtime
   {:migrations ragtime.sql.files/migrations,
    :database
