@@ -16,14 +16,93 @@
 
       <h3>Rest API</h3>
       <div id="rest-api-wrap">
-        <p>Use the following rest api endpoints to create short urls
+        <p>Use the following rest api calls to manage short urls
           from your own programs</p>
-        <dl>
-          <dd>POST /urls - Create a new Url</dd>
-          <dd>GET /urls - Retrieve JSON list of urls</dd>
-          <dd>GET /urls/:short-url - Given a short url, get the
-          original long url. </dd>
-        </dl>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">GET /urls</h3>
+          </div>
+          <div class="panel-body">
+            <p>Returns a list of short urls</p>
+            <h5>Parameters</h5>
+            <ul>
+              <li>limit - the maximumn number of results to return</li>
+              <li>offset - specify the number of results to skip. This
+                value is zero based. For example, to skip the first 5
+                results, set offset to 4.</li>
+              <li>order - specify what field to order the results by. This
+                can be one of lastmodified, short_url, url, or id</li>
+              <li>asc - specify whether you want results ordered from
+                lowest to highest or highest to lowest. By default, asc is
+                set to true and results are ordered lowest to highest. Set
+                asc to false to get the reverse. </li>
+            </ul>
+            <h5>Example</h5>
+            <p>Get a list of latest urls created. By default, the results are
+              limited to 50 urls and ordered by lastmodified date.</p>
+            <code>curl -i /urls?limit=2&amp;order=id&amp;asc=false</code>
+            <p>Sample Results</p>
+            <code>[
+              {&quot;lastmodified&quot;:&quot;2015-01-15T17:53:53Z&quot;,
+              &quot;short_url&quot;:&quot;c&quot;,
+              &quot;url&quot;:&quot;http://mysite.com&quot;,
+              &quot;id&quot;:2},
+              {&quot;lastmodified&quot;:&quot;2015-01-16T18:08:23Z&quot;,
+              &quot;short_url&quot;:&quot;d&quot;,
+              &quot;url&quot;:&quot;http://yoursite.com&quot;,
+              &quot;id&quot;:1}
+              ]
+            </code>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">GET /urls/(short-url)</h3>
+          </div>
+          <div class="panel-body">
+            <p>Return all information about short url including the original url</p>
+            <h5>Parameters</h5>
+            <ul>
+              <li>short-url - the short url minus the hostname. For
+                example, if the entire short url is
+                http://all2.us/abc, then only use 'abc'.</li>
+            </ul>
+            <h5>Example</h5>
+            <code>curl -i /urls/abc</code>
+            <p>Sample Result</p>
+            <code>
+              {&quot;lastmodified&quot;:&quot;2015-01-15T17:53:53Z&quot;,
+              &quot;short_url&quot;:&quot;abc&quot;,
+              &quot;url&quot;:&quot;http://mysite.com&quot;,
+              &quot;id&quot;:42}
+            </code>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">POST /urls</h3>
+          </div>
+          <div class="panel-body">
+            <p>Create a new short url. This endpoing expects a multipart
+              form post request.</p>
+            <h5>Form Data Fields</h5>
+            <ul>
+              <li>url - the url to be shortened</li>
+            </ul>
+            <h5>Example</h5>
+            <code>curl -i --form "url=http://mysite.com" /urls</code>
+            <p>Sample Result</p>
+            <code>
+              {&quot;lastmodified&quot;:&quot;2015-01-15T17:53:53Z&quot;,
+              &quot;short_url&quot;:&quot;q&quot;,
+              &quot;url&quot;:&quot;http://mysite.com&quot;,
+              &quot;id&quot;:43}
+            </code>
+          </div>
+        </div>
       </div>
     </div>
   </div>

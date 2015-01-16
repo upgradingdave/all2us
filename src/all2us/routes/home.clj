@@ -58,8 +58,9 @@
 
   ;; REST API
   (POST "/urls" [url] (create-url url))
+
   (GET "/urls" {{limit :limit asc :asc offset :offset order :order} :params}
-       (let [limit (if limit (Integer/parseInt limit) limit)
+       (let [limit (if limit (Integer/parseInt limit) 50)
              asc (if asc (Boolean/parseBoolean asc) asc)
              offset (if offset (Integer/parseInt offset) offset)
              order (keyword order)
