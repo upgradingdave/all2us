@@ -137,7 +137,14 @@
    :phases 
    {:configure (plan-fn 
                 ;; start the service!
-                (exec {:language :bash} "sudo service all2us start"))}
+                (exec {:language :bash} "sudo service all2us start"))
+    :redeploy (plan-fn
+               ;;TODO dry
+               (remote-file (str *deploy-path* "/all2us.jar") 
+                            :local-file "target/all2us.jar"
+                            :owner *deploy-user*
+                            :group *deploy-user*)
+               (exec {:language :bash} "sudo service all2us restart"))}
    :node-spec (my-node-spec provider-type)
    :default-phases [:install :configure]))
 
